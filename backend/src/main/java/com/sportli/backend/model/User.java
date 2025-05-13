@@ -26,5 +26,4 @@ public class User {
     private String skillLevel;
     private String availability;
     private String bio;
-    private Boolean isEduVerified;
 }
