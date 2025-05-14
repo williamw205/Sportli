@@ -1,6 +1,5 @@
 package com.sportli.backend.service;
 
-import java.util.Optional;
 import java.util.Objects;
 import com.sportli.backend.repository.UserRepository;
 import com.sportli.backend.model.User;
@@ -17,26 +16,18 @@ public class UserService {
     }
 
     public User createOrUpdateUser(User user) {
-        // Optional --> Might contain a user or might be empty
-        Optional<User> existingUserOpt = userRepository.findById(user.getId());
 
-        User savedUser;
+        if (user.getId() != null && userRepository.existsById(user.getId())) {
 
-        if (existingUserOpt.isPresent()) {
-
-            User existingUser = existingUserOpt.get();
+            User existingUser = userRepository.findById(user.getId()).get();
 
             // Using helper method to only change fields that are updated
             updateUserFieldsIfChanged(existingUser, user);
 
-            savedUser = userRepository.save(existingUser);
+            return userRepository.save(existingUser);
         } else {
-            savedUser = userRepository.save(user);
+            return userRepository.save(user);
         }
-
-        // Sends final updated object with ID back to the client
-        return savedUser;
-
     }
 
     public User getUserById(Long id) {
